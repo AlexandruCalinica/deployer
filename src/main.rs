@@ -1,24 +1,58 @@
-use std::process::Command;
+use std::process::{Command, Stdio};
+use std::vec;
 
-fn check_command(command: &str) {
-  let process = Command::new(command).arg("--version").output();
+struct Dependency {
+    name: String,
+}
 
-  println!("{:=<120}", "=");
-  println!();
+impl Dependency {
+    fn check(&self) {
+        let output = Command::new(&self.name).arg("--version").output();
 
-  let process = match process {
-    Ok(output) => {
-      println!("{:?} found", command);
-      println!("{}", String::from_utf8_lossy(&output.stdout));
+        println!("{:=<120}", "=");
+        println!();
+
+        match output {
+            Ok(res) => {
+                println!("{:?} found", self.name);
+                println!("{}", String::from_utf8_lossy(&res.stdout));
+            }
+            Err(err) => {
+                println!("{:?} is not installed", self.name);
+                println!("{}", err);
+            }
+        };
     }
-    Err(output) => println!("{}", output),
-  };
+}
+
+fn run(cmd: &str, arg: &str) {
+    let mut output = Command::new(cmd)
+        .arg(arg)
+        .stdout(Stdio::inherit())
+        .stderr(Stdio::inherit())
+        .spawn()
+        .unwrap();
+
+    println!("{:=<120}", "=");
+    println!();
+
+    let std = output.wait();
+    println!("{:?}", std);
 }
 
 fn main() {
-  let commands = ["curl", "node", "docker", "plm"];
+    let mut commands = vec![];
+    commands.insert(0, "curl".to_string());
+    commands.insert(0, "node".to_string());
+    commands.insert(0, "docker".to_string());
+    commands.insert(0, "plm".to_string());
 
-  for cmd in commands.iter() {
-    check_command(cmd);
-  }
+    for name in commands.iter() {
+        Dependency {
+            name: name.to_string(),
+        }
+        .check();
+    }
+
+    run("docker-compose", "up");
 }
