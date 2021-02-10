@@ -1,46 +1,40 @@
-use std::process::{Command, Stdio};
-use std::vec;
+// use fs::read_to_string;
+use std::{
+    // env::args,
+    fs,
+    // io::BufReader,
+    // path::PathBuf,
+    vec,
+};
+// use structopt::StructOpt;
+mod command;
+mod config;
+mod deps;
 
-struct Dependency {
-    name: String,
-}
+use crate::command::run;
+use crate::config::read_from;
+use crate::deps::Dependency;
 
-impl Dependency {
-    fn check(&self) {
-        let output = Command::new(&self.name).arg("--version").output();
-
-        println!("{:=<120}", "=");
-        println!();
-
-        match output {
-            Ok(res) => {
-                println!("{:?} found", self.name);
-                println!("{}", String::from_utf8_lossy(&res.stdout));
-            }
-            Err(err) => {
-                println!("{:?} is not installed", self.name);
-                println!("{}", err);
-            }
-        };
-    }
-}
-
-fn run(cmd: &str, arg: &str) {
-    let mut output = Command::new(cmd)
-        .arg(arg)
-        .stdout(Stdio::inherit())
-        .stderr(Stdio::inherit())
-        .spawn()
-        .unwrap();
-
-    println!("{:=<120}", "=");
-    println!();
-
-    let std = output.wait();
-    println!("{:?}", std);
-}
+/// Search for a pattern
+// #[derive(StructOpt)]
+// struct Cli {
+//     /// The pattern to look for
+//     pattern: String,
+//     /// The path to the file to read
+//     #[structopt(parse(from_os_str))]
+//     path: PathBuf,
+// }
 
 fn main() {
+    // let args = Cli::from_args();
+
+    let content = fs::read_to_string("deployer.json").expect("could not read file");
+
+    match read_from(&content) {
+        Ok(res) => println!("{:?}", res.url),
+        Err(err) => println!("{:?}", err),
+    };
+
     let mut commands = vec![];
     commands.insert(0, "curl".to_string());
     commands.insert(0, "node".to_string());
