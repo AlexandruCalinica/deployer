@@ -1,4 +1,5 @@
 use std::process::Command;
+use std::vec;
 pub struct Dependency {
     pub name: String,
 }
@@ -8,17 +9,29 @@ impl Dependency {
         let output = Command::new(&self.name).arg("--version").output();
 
         println!("{:=<120}", "=");
-        println!();
 
         match output {
-            Ok(res) => {
+            Ok(_) => {
                 println!("{:?} found", self.name);
-                println!("{}", String::from_utf8_lossy(&res.stdout));
             }
-            Err(err) => {
+            Err(_) => {
                 println!("{:?} is not installed", self.name);
-                println!("{}", err);
             }
         };
+    }
+}
+
+pub fn check_dependencies() {
+    let mut commands = vec![];
+    commands.insert(0, "curl".to_string());
+    commands.insert(0, "node".to_string());
+    commands.insert(0, "docker".to_string());
+    commands.insert(0, "plm".to_string());
+
+    for name in commands.iter() {
+        Dependency {
+            name: name.to_string(),
+        }
+        .check();
     }
 }
