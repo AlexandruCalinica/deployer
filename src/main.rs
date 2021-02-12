@@ -1,6 +1,7 @@
 use std::fs;
 
 use structopt::StructOpt;
+
 mod cli;
 mod command;
 mod config;
@@ -12,19 +13,19 @@ use crate::config::read_from;
 use crate::deps::check_dependencies;
 
 fn main() {
+    let args = Cli::from_args();
+    println!("{:#?}", args);
     check_dependencies();
-
-    let _args = Cli::from_args();
-    // println!("{:#?}", args.cmd);
 
     let content = fs::read_to_string("deployer.json").expect("could not read file");
 
-    let _url = match read_from(&content) {
+    let volumes = match read_from(&content) {
         Ok(res) => {
-            res.url;
+            res.local_volumes;
         }
         Err(err) => println!("{:?}", err),
     };
+    println!("{:?}", volumes);
 
-    run("docker-compose", "up");
+    run("docker-compose", vec!["up"]);
 }

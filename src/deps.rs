@@ -22,11 +22,7 @@ impl Dependency {
 }
 
 pub fn check_dependencies() {
-    let mut commands = vec![];
-    commands.insert(0, "curl".to_string());
-    commands.insert(0, "node".to_string());
-    commands.insert(0, "docker".to_string());
-    commands.insert(0, "plm".to_string());
+    let commands = vec!["curl", "node", "docker", "plm"];
 
     for name in commands.iter() {
         Dependency {

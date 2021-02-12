@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::Result;
 #[derive(Serialize, Deserialize)]
 pub struct Config {
-    pub url: String,
+    pub local_volumes: Vec<String>,
 }
 
 pub fn read_from(data: &str) -> Result<Config> {

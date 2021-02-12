@@ -4,23 +4,24 @@ use structopt::StructOpt;
     name = "Youlo deployer",
     about = "CLI tool for orchestrating docker deployments."
 )]
-#[derive(StructOpt)]
+#[derive(StructOpt, Debug)]
 pub struct Cli {
-    /// Run multiple or a single docker container based on the docker-compose.yml file.
+    /// Run a selection of containers or all at once.
     #[structopt(subcommand)]
-    pub cmd: Command,
+    pub run: Run,
 }
 
 #[derive(Debug, StructOpt)]
-pub enum Command {
-    Run(Run),
-}
-
-#[derive(Debug, StructOpt)]
-pub struct Run {
-    #[structopt(long, short)]
-    all: bool,
-
-    #[structopt(long, short)]
-    local: String,
+pub enum Run {
+    Run {
+        /// Array of containers ready to run.
+        #[structopt(short, long)]
+        jobs: Vec<String>,
+        /// Run all at once.
+        #[structopt(short, long)]
+        all: bool,
+        /// Run in development mode.
+        #[structopt(short, long)]
+        local: bool,
+    },
 }

@@ -1,3 +1,7 @@
 {
-  "url": "http://example.io/mue?who=psd"
+  "local_volumes": [
+    "youlo-client",
+    "feed-server",
+    "file-server"
+  ]
 }

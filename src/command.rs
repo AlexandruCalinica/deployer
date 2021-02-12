@@ -1,8 +1,8 @@
 use std::process::{Command, Stdio};
 
-pub fn run(cmd: &str, arg: &str) {
+pub fn run(cmd: &str, args: Vec<&str>) {
     let mut output = Command::new(cmd)
-        .arg(arg)
+        .args(args)
         .stdout(Stdio::inherit())
         .stderr(Stdio::inherit())
         .spawn()
