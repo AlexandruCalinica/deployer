@@ -5,17 +5,12 @@ use structopt::StructOpt;
     about = "CLI tool for orchestrating docker deployments."
 )]
 #[derive(StructOpt, Debug)]
-pub struct Cli {
+pub enum Cli {
     /// Run a selection of containers or all at once.
-    #[structopt(subcommand)]
-    pub run: Run,
-}
-
-#[derive(Debug, StructOpt)]
-pub enum Run {
+    #[structopt(name = "run")]
     Run {
         /// Array of containers ready to run.
-        #[structopt(short, long)]
+        #[structopt(short, long, required_if("all", "false"))]
         jobs: Vec<String>,
         /// Run all at once.
         #[structopt(short, long)]

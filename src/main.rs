@@ -13,8 +13,20 @@ use crate::config::read_from;
 use crate::deps::check_dependencies;
 
 fn main() {
-    let args = Cli::from_args();
-    println!("{:#?}", args);
+    match Cli::from_args() {
+        Cli::Run { all, jobs, local } => {
+            if local == true && jobs.len() == 0 {
+                println!("run all local");
+            }
+            if local == true && jobs.len() > 0 {
+                println!("run local {:?}", jobs);
+            }
+            if all {
+                println!("run all");
+            }
+        }
+    }
+
     check_dependencies();
 
     let content = fs::read_to_string("deployer.json").expect("could not read file");
