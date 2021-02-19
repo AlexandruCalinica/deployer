@@ -8,8 +8,6 @@ impl Dependency {
     pub fn check(&self) {
         let output = Command::new(&self.name).arg("--version").output();
 
-        println!("{:=<120}", "=");
-
         match output {
             Ok(_) => {
                 println!("{:?} found", self.name);
@@ -22,7 +20,7 @@ impl Dependency {
 }
 
 pub fn check_dependencies() {
-    let commands = vec!["curl", "node", "docker", "plm"];
+    let commands = vec!["curl", "node", "docker"];
 
     for name in commands.iter() {
         Dependency {
