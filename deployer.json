@@ -1,7 +1,16 @@
 {
   "local_volumes": [
-    "youlo-client",
-    "feed-server",
-    "file-server"
+    {
+      "path": "./packages/module-1",
+      "name": "module-1"
+    },
+    {
+      "path": "./packages/module-2",
+      "name": "module-2"
+    },
+    {
+      "path": "./packages/module-3",
+      "name": "module-3"
+    }
   ]
 }

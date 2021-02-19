@@ -8,9 +8,9 @@ pub fn run(cmd: &str, args: Vec<&str>) {
         .spawn()
         .unwrap();
 
-    println!("{:=<120}", "=");
+    match output.wait() {
+        Ok(status) => println!("{}", status),
+        Err(err) => println!("{}", err),
+    }
     println!();
-
-    let std = output.wait();
-    println!("{:?}", std);
 }

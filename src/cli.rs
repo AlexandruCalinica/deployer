@@ -2,7 +2,7 @@ use structopt::StructOpt;
 
 #[structopt(
     name = "Youlo deployer",
-    about = "CLI tool for orchestrating docker deployments."
+    about = "CLI tool for orchestrating docker containers."
 )]
 #[derive(StructOpt, Debug)]
 pub enum Cli {
@@ -10,7 +10,7 @@ pub enum Cli {
     #[structopt(name = "run")]
     Run {
         /// Array of containers ready to run.
-        #[structopt(short, long, required_if("all", "false"))]
+        #[structopt(short, long)]
         jobs: Vec<String>,
         /// Run all at once.
         #[structopt(short, long)]
@@ -18,5 +18,17 @@ pub enum Cli {
         /// Run in development mode.
         #[structopt(short, long)]
         local: bool,
+    },
+
+    /// Clean a selection of containers or all at once.
+    #[structopt(name = "clean")]
+    Clean {
+        /// Clean selection of containers.
+        #[structopt(short, long)]
+        all: bool,
+
+        /// Names of containers to clean.
+        #[structopt(short, long)]
+        names: Vec<String>,
     },
 }
