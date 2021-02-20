@@ -2,15 +2,21 @@
   "local_volumes": [
     {
       "path": "./packages/module-1",
-      "name": "module-1"
+      "name": "module-1",
+      "command": "node index",
+      "port_map": "5000:5000"
     },
     {
       "path": "./packages/module-2",
-      "name": "module-2"
+      "name": "module-2",
+      "command": "node index",
+      "port_map": "4001:4001"
     },
     {
       "path": "./packages/module-3",
-      "name": "module-3"
+      "name": "module-3",
+      "command": "node index",
+      "port_map": "4002:4002"
     }
   ]
 }

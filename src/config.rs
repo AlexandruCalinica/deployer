@@ -11,6 +11,8 @@ pub struct Config {
 pub struct LocalVolume {
     pub path: String,
     pub name: String,
+    pub command: String,
+    pub port_map: String,
 }
 
 pub fn read_from(data: &str) -> Result<Config> {

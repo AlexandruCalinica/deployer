@@ -17,7 +17,7 @@ fn main() {
                 println!("run all jobs local");
                 for vol in cfg.local_volumes.iter() {
                     println!("run local {:?}", vol.name);
-                    run_local(&vol.path, &vol.name)
+                    run_local(&vol.path, &vol.name, &vol.command, &vol.port_map)
                 }
             } else if local && jobs.len() > 0 {
                 let filtered: Vec<LocalVolume> = cfg
@@ -28,7 +28,7 @@ fn main() {
 
                 for vol in filtered.iter() {
                     println!("run local {}", vol.name);
-                    run_local(&vol.path, &vol.name)
+                    run_local(&vol.path, &vol.name, &vol.command, &vol.port_map)
                 }
             } else if all && !local && jobs.len() == 0 {
                 println!("run all jobs from docker image");

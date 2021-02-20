@@ -1,1 +1,1 @@
-console.log('Module 1 modificat');
+console.log("Module 1");

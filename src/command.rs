@@ -15,19 +15,19 @@ pub fn run(cmd: &str, args: Vec<&str>) {
     }
 }
 
-pub fn run_local(target: &str, name: &str) {
+pub fn run_local(target: &str, name: &str, command: &str, port_map: &str) {
     cleanup(name);
 
     let target_path = path::PathBuf::from(target);
     let absolute_target_path = fs::canonicalize(&target_path).unwrap();
+    let path = &absolute_target_path.to_str().unwrap();
+    let cmd_str = format!(
+        r#"run -dp {} --name {} -w /app -v {}:/app node:alpine sh -c"#,
+        port_map, name, path
+    );
 
-    let cmd = format!(
-        r#"run -d --name {} -v {:#?}:/app node:alpine"#,
-        name, absolute_target_path
-    )
-    .replace("\"", "");
-
-    let splitted: Vec<&str> = cmd.split(' ').collect();
+    let mut splitted: Vec<&str> = cmd_str.split(' ').collect();
+    splitted.push(command);
 
     run("docker", splitted);
 }
