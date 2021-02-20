@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Result;
+use std::fs;
+
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Config {
     pub local_volumes: Vec<LocalVolume>,
@@ -14,4 +16,22 @@ pub struct LocalVolume {
 pub fn read_from(data: &str) -> Result<Config> {
     let cfg: Config = serde_json::from_str(data)?;
     Ok(cfg)
+}
+
+pub fn load_config() -> Config {
+    let content = fs::read_to_string("deployer.json").expect("could not read file");
+    let config: Config;
+
+    match read_from(&content) {
+        Ok(res) => {
+            config = res;
+        }
+        Err(err) => {
+            println!("{}", err);
+            config = Config {
+                local_volumes: vec![],
+            }
+        }
+    };
+    config
 }
