@@ -1,5 +1,8 @@
 use structopt::StructOpt;
 
+use crate::command::{cleanup, run, run_local};
+use crate::config::{Config, LocalVolume};
+
 #[structopt(
     name = "Youlo deployer",
     about = "CLI tool for orchestrating docker containers."
@@ -31,4 +34,53 @@ pub enum Cli {
         #[structopt(short, long)]
         names: Vec<String>,
     },
+
+    #[structopt(name = "start")]
+    Start {},
+}
+
+pub fn run_all_local(cfg: Config) {
+    println!("run all jobs local");
+    for vol in cfg.local_volumes.iter() {
+        println!("run local {:?}", vol.name);
+        run_local(&vol.path, &vol.name, &vol.command, &vol.port_map)
+    }
+}
+
+pub fn run_some_local(cfg: Config, jobs: Vec<String>) {
+    let filtered: Vec<LocalVolume> = cfg
+        .local_volumes
+        .into_iter()
+        .filter(|vol| jobs.iter().any(|j| j == &vol.name))
+        .collect();
+
+    for vol in filtered.iter() {
+        println!("run local {}", vol.name);
+        run_local(&vol.path, &vol.name, &vol.command, &vol.port_map)
+    }
+}
+
+pub fn run_all() {
+    println!("run all jobs defined in docker-compose");
+    run("docker-compose", vec!["up"]);
+}
+
+pub fn clean_all(cfg: Config) {
+    for vol in cfg.local_volumes.iter() {
+        cleanup(&vol.name);
+        println!("cleaned {}", vol.name);
+    }
+}
+
+pub fn clean_some(cfg: Config, names: Vec<String>) {
+    let filtered: Vec<LocalVolume> = cfg
+        .local_volumes
+        .into_iter()
+        .filter(|vol| names.iter().any(|n| n == &vol.name))
+        .collect();
+
+    for vol in filtered.iter() {
+        println!("cleaned {}", vol.name);
+        cleanup(&vol.name);
+    }
 }

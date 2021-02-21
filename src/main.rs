@@ -1,12 +1,15 @@
+use dialoguer::{theme::ColorfulTheme, Select};
 use structopt::StructOpt;
 
 mod cli;
 mod command;
 mod config;
+mod dialog;
+mod util;
 
-use crate::cli::Cli;
-use crate::command::{cleanup, run, run_local};
-use crate::config::{load_config, LocalVolume};
+use crate::cli::{clean_all, clean_some, run_all, run_all_local, run_some_local, Cli};
+use crate::config::load_config;
+use crate::dialog::{start_from_image, start_from_local};
 
 fn main() {
     let cfg = load_config();
@@ -14,44 +17,32 @@ fn main() {
     match Cli::from_args() {
         Cli::Run { all, jobs, local } => {
             if all && local && jobs.len() == 0 {
-                println!("run all jobs local");
-                for vol in cfg.local_volumes.iter() {
-                    println!("run local {:?}", vol.name);
-                    run_local(&vol.path, &vol.name, &vol.command, &vol.port_map)
-                }
+                run_all_local(cfg);
             } else if local && jobs.len() > 0 {
-                let filtered: Vec<LocalVolume> = cfg
-                    .local_volumes
-                    .into_iter()
-                    .filter(|vol| jobs.iter().any(|j| j == &vol.name))
-                    .collect();
-
-                for vol in filtered.iter() {
-                    println!("run local {}", vol.name);
-                    run_local(&vol.path, &vol.name, &vol.command, &vol.port_map)
-                }
+                run_some_local(cfg, jobs);
             } else if all && !local && jobs.len() == 0 {
-                println!("run all jobs from docker image");
-                run("docker-compose", vec!["up"]);
+                run_all();
             }
         }
         Cli::Clean { all, names } => {
             if all {
-                for vol in cfg.local_volumes.iter() {
-                    cleanup(&vol.name);
-                    println!("cleaned {}", vol.name);
-                }
+                clean_all(cfg);
             } else if names.len() > 0 {
-                let filtered: Vec<LocalVolume> = cfg
-                    .local_volumes
-                    .into_iter()
-                    .filter(|vol| names.iter().any(|n| n == &vol.name))
-                    .collect();
+                clean_some(cfg, names);
+            }
+        }
+        Cli::Start {} => {
+            let entry_opt = &["image", "local"];
+            let entry_sel = Select::with_theme(&ColorfulTheme::default())
+                .items(entry_opt)
+                .default(0)
+                .interact()
+                .unwrap();
 
-                for vol in filtered.iter() {
-                    println!("cleaned {}", vol.name);
-                    cleanup(&vol.name);
-                }
+            match entry_sel {
+                0 => start_from_image(&cfg),
+                1 => start_from_local(&cfg),
+                _ => println!("Option not available"),
             }
         }
     }
