@@ -21,7 +21,8 @@ pub fn read_from(data: &str) -> Result<Config> {
 }
 
 pub fn load_config() -> Config {
-    let content = fs::read_to_string("deployer.json").expect("could not read file");
+    let content = fs::read_to_string("./deplo/deplo.json")
+        .expect("could not read deplo.json configuration file");
     let config: Config;
 
     match read_from(&content) {

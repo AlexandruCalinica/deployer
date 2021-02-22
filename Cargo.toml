@@ -1,5 +1,5 @@
 [package]
-name = "deployer"
+name = "deplo"
 version = "0.1.0"
 authors = ["AlexandruCalinica <calinicaalexandru@gmail.com>"]
 edition = "2018"

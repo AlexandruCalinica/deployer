@@ -7,7 +7,7 @@ mod config;
 mod dialog;
 mod util;
 
-use crate::cli::{clean_all, clean_some, run_all, run_all_local, run_some_local, Cli};
+use crate::cli::{clean_all, clean_some, compose_up, run_all, run_all_local, run_some_local, Cli};
 use crate::config::load_config;
 use crate::dialog::{start_from_image, start_from_local};
 use crate::util::logger;
@@ -33,7 +33,7 @@ fn main() {
             }
         }
         Cli::Start {} => {
-            logger("Start a docker container from an image or run dev-mode local containers.");
+            logger("Start a single or multiple selection of docker containers.");
             let entry_opt = &["image", "local"];
             let entry_sel = Select::with_theme(&ColorfulTheme::default())
                 .items(entry_opt)
@@ -46,6 +46,10 @@ fn main() {
                 1 => start_from_local(&cfg),
                 _ => println!("Option not available"),
             }
+        }
+        Cli::Up {} => {
+            logger("Start docker-compose in dev mode.");
+            compose_up();
         }
     }
 }

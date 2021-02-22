@@ -1,0 +1,26 @@
+version: '3'
+services:
+  module-1:
+    image: node:alpine
+    working_dir: /app/module-1
+    command: ["node", "index.js"]
+    volumes: 
+      - ../example:/app
+    expose:
+      - 3000
+  module-2:
+    image: node:alpine
+    working_dir: /app/module-2
+    command: ["node", "index.js"]
+    volumes: 
+      - ../example:/app
+    expose:
+      - 3001
+  module-3:
+    image: node:alpine
+    working_dir: /app/module-3
+    command: ["node", "index.js"]
+    volumes: 
+      - ../example:/app
+    expose:
+      - 3002

@@ -35,8 +35,13 @@ pub enum Cli {
         names: Vec<String>,
     },
 
+    /// Start a single or multiple selection of docker containers.
     #[structopt(name = "start")]
     Start {},
+
+    /// Start docker-compose in dev mode.
+    #[structopt(name = "up")]
+    Up {},
 }
 
 pub fn run_all_local(cfg: Config) {
@@ -83,4 +88,11 @@ pub fn clean_some(cfg: Config, names: Vec<String>) {
         println!("cleaned {}", vol.name);
         cleanup(&vol.name);
     }
+}
+
+pub fn compose_up() {
+    run(
+        "docker-compose",
+        vec!["-f", "./deplo/docker-compose.dev.yml", "up"],
+    );
 }
