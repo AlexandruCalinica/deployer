@@ -10,6 +10,7 @@ mod util;
 use crate::cli::{clean_all, clean_some, run_all, run_all_local, run_some_local, Cli};
 use crate::config::load_config;
 use crate::dialog::{start_from_image, start_from_local};
+use crate::util::logger;
 
 fn main() {
     let cfg = load_config();
@@ -32,6 +33,7 @@ fn main() {
             }
         }
         Cli::Start {} => {
+            logger("Start a docker container from an image or run dev-mode local containers.");
             let entry_opt = &["image", "local"];
             let entry_sel = Select::with_theme(&ColorfulTheme::default())
                 .items(entry_opt)

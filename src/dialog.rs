@@ -1,9 +1,10 @@
 use crate::command::run_local;
 use crate::config::Config;
-use crate::util::map_volumes_names;
+use crate::util::{logger, map_volumes_names};
 use dialoguer::{theme::ColorfulTheme, MultiSelect, Select};
 
 pub fn start_from_image(cfg: &Config) {
+    logger("Select one or multiple jobs available. default: all selected");
     let loc_vols = map_volumes_names(cfg);
 
     let mut defaults: Vec<bool> = vec![];
@@ -21,6 +22,7 @@ pub fn start_from_image(cfg: &Config) {
 }
 
 pub fn start_from_local(cfg: &Config) {
+    logger("Select one job to run localy.");
     let loc_vols_names = map_volumes_names(cfg);
     let loc_vols = &cfg.local_volumes;
 
