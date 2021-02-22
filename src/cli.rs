@@ -93,6 +93,6 @@ pub fn clean_some(cfg: Config, names: Vec<String>) {
 pub fn compose_up() {
     run(
         "docker-compose",
-        vec!["-f", "./deplo/docker-compose.dev.yml", "up"],
+        vec!["-f", "./_deplo/docker-compose.dev.yml", "up"],
     );
 }
